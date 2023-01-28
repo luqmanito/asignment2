@@ -1,5 +1,5 @@
 
-# Project Title
+# Inventory List Backend
 
 This simple CRUD (Create, Read, Update, Delete) table backend web application is built with a RESTful API that allows users to perform CRUD operations on a list of items stored in a database. The API is built using a popular web framework such as Node.js, Express and PostgreSql.
 
