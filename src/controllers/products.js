@@ -3,8 +3,7 @@ const productsModels = require("../models/products");
 
 const get = async (req, res) => {
   try {
-    const result = await productsModels.getProducts(req.query, req.body);
-    console.log(req.body, 'dari control');
+    const result = await productsModels.getProducts(req.query);
     response(res, {
       status: 200,
       data: result.rows,

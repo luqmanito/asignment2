@@ -1,14 +1,12 @@
 const postgreDB = require("../../config");
 
-const getProducts = (queryParams, body) => {
+const getProducts = (queryParams) => {
   return new Promise((resolve, reject) => {
     let query = `select * from products`;
-    const { date1, date2 } = body;
     if (queryParams.search) {
       query += ` where lower(name) like lower('%${queryParams.search}%')`;
     }
-    console.log(body, 'dari model');
-    if (Object.keys(body).length === 0) {
+    if (!queryParams.filter1 && !queryParams.filter2) {
       if (queryParams.sort == "oldest") {
         query += ` order by transaction_time asc`;
       }
@@ -29,22 +27,22 @@ const getProducts = (queryParams, body) => {
       }
       postgreDB.query(query, (err, result) => {
         if (err) {
-          console.log(err);
+          console.log("zzz", err);
           return reject(err);
         }
-        console.log('as',query);
+        console.log("as", query);
         return resolve(result);
       });
     }
 
-    if (Object.keys(body).length === 2) {
-      query += ` where transaction_time between $1 and $2`;
-      postgreDB.query(query, [date1, date2], (err, result) => {
+    if (queryParams.filter1 && queryParams.filter2) {
+      query += ` where transaction_time between '${queryParams.filter1}' and '${queryParams.filter2}'`;
+      postgreDB.query(query, (err, result) => {
         if (err) {
-          console.log(err);
+          console.log("ccc", err);
           return reject(err);
         }
-        console.log('su',query);
+        console.log("su", query);
         return resolve(result);
       });
     }
