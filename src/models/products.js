@@ -1,46 +1,50 @@
 const postgreDB = require("../../config");
 
-const getProducts = (queryParams) => {
+const getProducts = (queryParams, body) => {
   return new Promise((resolve, reject) => {
     let query = `select * from products`;
+    const { date1, date2 } = body;
     if (queryParams.search) {
       query += ` where lower(name) like lower('%${queryParams.search}%')`;
     }
-    if (queryParams.filter) {
-      if (queryParams.search) {
-        query += ` and lower(category) = lower('${queryParams.filter}')`;
-      } else {
-        query += ` where lower(category) = lower ('${queryParams.filter}')`;
+    if (Object.keys(body).length === 0) {
+      if (queryParams.sort == "oldest") {
+        query += ` order by transaction_time asc`;
       }
-    }
-    if (queryParams.sort == "oldest") {
-      query += ` order by transaction_time asc`;
-    }
-    if (queryParams.sort == "newest") {
-      query += ` order by transaction_time desc`;
-    }
-    if (queryParams.sort == "less-popular") {
-      query += ` order by sold asc`;
-    }
-    if (queryParams.sort == "most-popular") {
-      query += ` order by sold desc`;
-    }
-    if (queryParams.sort == "ascending") {
-      query += ` order by name asc `;
-    }
-    if (queryParams.sort == "descending") {
-      query += ` order by name desc `;
+      if (queryParams.sort == "newest") {
+        query += ` order by transaction_time desc`;
+      }
+      if (queryParams.sort == "less-popular") {
+        query += ` order by sold asc`;
+      }
+      if (queryParams.sort == "most-popular") {
+        query += ` order by sold desc`;
+      }
+      if (queryParams.sort == "ascending") {
+        query += ` order by name asc `;
+      }
+      if (queryParams.sort == "descending") {
+        query += ` order by name desc `;
+      }
+      postgreDB.query(query, (err, result) => {
+        if (err) {
+          console.log(err);
+          return reject(err);
+        }
+        return resolve(result);
+      });
     }
 
-    postgreDB.query(query, (err, result) => {
-      if (err) {
-        console.log(query);
-        console.log(err);
-        return reject(err);
-      }
-      console.log(query);
-      return resolve(result);
-    });
+    if (Object.keys(body).length === 2) {
+      query += ` where transaction_time between $1 and $2`;
+      postgreDB.query(query, [date1, date2], (err, result) => {
+        if (err) {
+          console.log(err);
+          return reject(err);
+        }
+        return resolve(result);
+      });
+    }
   });
 };
 
@@ -67,7 +71,7 @@ const addProducts = (body) => {
 
 const editProducts = (body, queryParams) => {
   return new Promise((resolve, reject) => {
-    const { name, category, quantity, sold, transaction_time } = body;
+    // const { name, category, quantity, sold, transaction_time } = body;
     let query = "update products set ";
     const values = [];
 
@@ -106,13 +110,11 @@ const dropProducts = (queryParams) => {
   });
 };
 
-
 const productsModels = {
   getProducts,
   addProducts,
   editProducts,
   dropProducts,
-
 };
 
 module.exports = productsModels;

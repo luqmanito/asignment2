@@ -3,7 +3,7 @@ const productsModels = require("../models/products");
 
 const get = async (req, res) => {
   try {
-    const result = await productsModels.getProducts(req.query);
+    const result = await productsModels.getProducts(req.query, req.body);
     response(res, {
       status: 200,
       data: result.rows,
