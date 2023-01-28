@@ -6,6 +6,9 @@ const getProducts = (queryParams) => {
     if (queryParams.search) {
       query += ` where lower(name) like lower('%${queryParams.search}%')`;
     }
+    if (queryParams.filterby) {
+      query += ` where lower(category) like lower('%${queryParams.filterby}%')`;
+    }
     if (!queryParams.filter1 && !queryParams.filter2) {
       if (queryParams.sort == "oldest") {
         query += ` order by transaction_time asc`;
