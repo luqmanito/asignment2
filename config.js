@@ -1,6 +1,7 @@
 require("dotenv").config();
 const {
   PORT,
+  DB_PORT,
   DB_PASSWORD,
   DB_HOST_DEV,
   DB_USER_DEV,
@@ -21,7 +22,7 @@ const postgreDB = new Pool({
   user: DB_USER_DEV,
   database: DB_NAME_DEV,
   password: DB_PASS_DEV,
-  port: PORT,
+  port: DB_PORT,
 });
 
 module.exports = postgreDB;
