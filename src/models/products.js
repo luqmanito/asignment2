@@ -31,6 +31,7 @@ const getProducts = (queryParams, body) => {
           console.log(err);
           return reject(err);
         }
+        console.log('as',query);
         return resolve(result);
       });
     }
@@ -42,6 +43,7 @@ const getProducts = (queryParams, body) => {
           console.log(err);
           return reject(err);
         }
+        console.log('su',query);
         return resolve(result);
       });
     }
