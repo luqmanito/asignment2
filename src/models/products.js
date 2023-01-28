@@ -7,6 +7,7 @@ const getProducts = (queryParams, body) => {
     if (queryParams.search) {
       query += ` where lower(name) like lower('%${queryParams.search}%')`;
     }
+    console.log(body, 'dari model');
     if (Object.keys(body).length === 0) {
       if (queryParams.sort == "oldest") {
         query += ` order by transaction_time asc`;
